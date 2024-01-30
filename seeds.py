@@ -54,28 +54,28 @@ if __name__ == "__main__":
 
         members.append(member)
 
-    matatus = []
-    for route in all_routes:
-        for _ in range(random.randint(20, 40)):  # Generate between 0 and 10 matatus per route
-            member = random.choice(members)  # Choose a random member in the list
-            route = random.choice(all_routes)  # Choose a random route in the list
+matatus = []
+for route in all_routes:
+    for _ in range(random.randint(20, 40)):  # Generate between 20 and 40 matatus per route
+        selected_member = random.choice(members)  # Choose a random member in the list
+        selected_route = route  # Use the current route from the outer loop
 
-            sec = random.choice(['B', 'C', 'D'])    
-            letter = fake.random_letter().title()
-            plates= fake.numerify(text=f'K{sec}{letter} ###{letter}') # Generate random, realistic Kenyan number plates
-                
-            matatu = Matatu(
-                driver_name = fake.name(),
-                driver_contact = int(fake.numerify(text='+2547#########')),
-                number_plate=plates,
-                capacity=random.choice([40, 50]),
-                avg_rounds_pd=random.choice([9, 10, 11, 12, 13, 14, 15, 16]),
-                member_id=member.id,  # Set the member_id for the matatu
-                route_id=route.id,  # Set the route_id for the matatu
-            )
-            matatus.append(matatu)
+        sec = random.choice(['B', 'C', 'D'])
+        letter = fake.random_letter().title()
+        plates = fake.numerify(text=f'K{sec}{letter} ###{letter}')  # Generate random, realistic Kenyan number plates
 
-    session.bulk_save_objects(matatus)
-    session.commit()
-    session.close()
-    print('Tables seeded successfully!')
+        matatu = Matatu(
+            driver_name=fake.name(),
+            driver_contact=int(fake.numerify(text='+2547#########')),
+            number_plate=plates,
+            capacity=random.choice([40, 50]),
+            avg_rounds_pd=random.choice([9, 10, 11, 12, 13, 14, 15, 16]),
+            member_id=selected_member.id,  # Set the member_id for the matatu
+            route_id=selected_route.id,  # Set the route_id for the matatu
+        )
+        matatus.append(matatu)
+
+session.bulk_save_objects(matatus)
+session.commit()
+session.close()
+print('Tables seeded successfully!')
